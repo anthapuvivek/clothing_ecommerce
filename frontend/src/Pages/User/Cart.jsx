@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 export default function Cart({ cart = [], setCart }) {
 
   const increaseQty = (id) => {
@@ -33,40 +33,46 @@ export default function Cart({ cart = [], setCart }) {
       ) : (
         <>
           {cart.map((item) => (
-            <div
-              key={item.id}
-              className="border p-4 mb-2 flex justify-between items-center"
-            >
-              <div>
-                <h2>{item.name}</h2>
-                <p className="text-green-600">
-                  ₹{item.price} × {item.qty}
-                </p>
-              </div>
+  <div
+    key={item.id}
+    className="border p-4 mb-2 flex justify-between items-center"
+  >
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => decreaseQty(item.id)}
-                  className="bg-gray-300 px-2 rounded"
-                >
-                  -
-                </button>
+    {/* LEFT SIDE (Image + Details) */}
+    <div className="flex items-center gap-4">
+      <img
+        src={item.image}
+        alt={item.name}
+        className="w-16 h-16 object-cover"
+      />
 
-                <span>{item.qty}</span>
+      <div>
+        <h2>{item.name}</h2>
+        <p className="text-green-600">
+          ₹{item.price} × {item.qty}
+        </p>
+      </div>
+    </div>
 
-                <button
-                  onClick={() => increaseQty(item.id)}
-                  className="bg-gray-300 px-2 rounded"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          ))}
+    {/* RIGHT SIDE (Buttons) */}
+    <div className="flex items-center gap-2">
+      <button onClick={() => decreaseQty(item.id)}>-</button>
+      <span>{item.qty}</span>
+      <button onClick={() => increaseQty(item.id)}>+</button>
+    </div>
+
+  </div>
+))}
 
           <h2 className="text-xl font-bold mt-4">
             Total: ₹{total}
           </h2>
+
+          <Link to="/orders">
+            <button className="mt-4 bg-green-500 text-white px-4 py-2 rounded">
+              Proceed to Order
+            </button>
+          </Link>
         </>
       )}
     </div>

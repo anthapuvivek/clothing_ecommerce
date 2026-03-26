@@ -9,6 +9,7 @@ import ProductDetails from "./Pages/User/ProductDetails";
 import Dashboard from "./Pages/Admin/Dashboard";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import Navbar from "./Components/Navbar";
+import Orders from "./Pages/User/Orders";
 
 export default function App() {
   const [cart, setCart] = useState(() => {
@@ -58,6 +59,8 @@ useEffect(() => {
             </ProtectedRoute>
           }
         />
+        {/* ORDERS */}
+        <Route path="/orders" element={<Orders cart={cart} setCart={setCart} />} />
       </Routes>
     </BrowserRouter>
   );
