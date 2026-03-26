@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./Pages/User/Home";
@@ -5,22 +6,44 @@ import Login from "./Pages/Auth/Login";
 import Signup from "./Pages/Auth/Signup";
 import Cart from "./Pages/User/Cart";
 import ProductDetails from "./Pages/User/ProductDetails";
-// import ProductCard from "../../Components/ProductCard";
 import Dashboard from "./Pages/Admin/Dashboard";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import Navbar from "./Components/Navbar";
 
-
 export default function App() {
+  const [cart, setCart] = useState(() => {
+  const savedCart = localStorage.getItem("cart");
+  return savedCart ? JSON.parse(savedCart) : [];
+});
+
+useEffect(() => {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}, [cart]);
+
+  const addToCart = (product) => {
+    const existing = cart.find(item => item.id === product.id);
+
+  if (existing) {
+    const updatedCart = cart.map(item =>
+      item.id === product.id
+        ? { ...item, qty: item.qty + 1 }
+        : item
+    );
+    setCart(updatedCart);
+  } else {
+    setCart([...cart, { ...product, qty: 1 }]);
+  }
+  };
+
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
+      <Navbar cart={cart} />
 
+      <Routes>
         {/* USER */}
-        <Route path="/" element={<Home />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/" element={<Home addToCart={addToCart} />} />
+        <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
+        <Route path="/product/:id" element={<ProductDetails addToCart={addToCart} />} />
 
         {/* AUTH */}
         <Route path="/login" element={<Login />} />
@@ -35,11 +58,6 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-
-       
-
-        <Route path="/cart" element={<Cart />} />
-
       </Routes>
     </BrowserRouter>
   );
